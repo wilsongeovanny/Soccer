@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Soccer.Web.Data;
 
 namespace Soccer.Web
 {
@@ -21,21 +23,33 @@ namespace Soccer.Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+      
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            // esta line apegamos esa lineas d ocdigo  pilas 
+            services.AddDbContext<DataContext>(cfg =>
+            {
+                cfg.UseSqlServer(Configuration.GetConnectionString("SoccerConnection"));
+            });
+            // aki nos vamos con comandos 
+            // en tolols ... nuget  pagkes consol
+            // y verificar que sea web
+            // agregamos migratioes
+            // anadimos con cualqueor nombr e crea una base de datos 
 
+            // add-migration AddTeamEntity
+            // update-database
+            // se crea la base de datos
+            // verigficar la base de  datos en sql server ay esta la tabla
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
